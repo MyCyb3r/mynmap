@@ -149,8 +149,8 @@ echo -e "${YELLOW}[5]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu
 echo -e "${YELLOW}[6]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535"
 echo -e "${YELLOW}[7]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1"
 echo -e "${YELLOW}[8]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535"
-echo -e "${CYAN}[9]${RESET} proxychains nmap -A --script=vuln(you can add more options later) "
-echo -e "${CYAN}[0]${RESET} proxychains nmap -A --script=vuln -p 1-65535(you can add more options later)\n"
+echo -e "${CYAN}[9]${RESET} proxychains nmap -A --script=vuln ${CYAN}(you can add more options later) "
+echo -e "${CYAN}[0]${RESET} proxychains nmap -A --script=vuln -p 1-65535 ${CYAN}(you can add more options later)${RESET}\n"
 read -p "Enter your choice (1-9): " option
 
 echo -e "Timing templates:\n

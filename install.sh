@@ -25,27 +25,27 @@ echo "Starting installation of dependencies..."
 echo -e "\n${CYAN}Detecting package manager...${RESET}"
 
 if command -v apt &>/dev/null; then
-    echo -e "${GREEN}APT detected (Debian/Ubuntu/Kali)${RESET}"
-    UPDATE_CMD="sudo apt update"
-    INSTALL_CMD="sudo apt install -y"
-    PACKAGES="nmap tor proxychains bat"
+  echo -e "${GREEN}APT detected (Debian/Ubuntu/Kali)${RESET}"
+  UPDATE_CMD="sudo apt update"
+  INSTALL_CMD="sudo apt install -y"
+  PACKAGES="nmap tor proxychains bat"
 elif command -v pacman &>/dev/null; then
-    echo -e "${GREEN}Pacman detected (Arch/Manjaro)${RESET}"
-    UPDATE_CMD="sudo pacman -Sy"
-    INSTALL_CMD="sudo pacman -S --noconfirm"
-    PACKAGES="nmap tor proxychains-ng bat"
+  echo -e "${GREEN}Pacman detected (Arch/Manjaro)${RESET}"
+  UPDATE_CMD="sudo pacman -Sy"
+  INSTALL_CMD="sudo pacman -S --noconfirm"
+  PACKAGES="nmap tor proxychains-ng bat"
 elif command -v dnf &>/dev/null || command -v yum &>/dev/null; then
-    echo -e "${GREEN}DNF/YUM detected (Fedora/RHEL/CentOS)${RESET}"
-    if command -v dnf &>/dev/null; then
-        INSTALL_CMD="sudo dnf install -y"
-    else
-        INSTALL_CMD="sudo yum install -y"
-    fi
-    UPDATE_CMD="sudo $INSTALL_CMD epel-release && sudo $INSTALL_CMD update"
-    PACKAGES="nmap tor proxychains bat"
+  echo -e "${GREEN}DNF/YUM detected (Fedora/RHEL/CentOS)${RESET}"
+  if command -v dnf &>/dev/null; then
+    INSTALL_CMD="sudo dnf install -y"
+  else
+    INSTALL_CMD="sudo yum install -y"
+  fi
+  UPDATE_CMD="sudo $INSTALL_CMD epel-release && sudo $INSTALL_CMD update"
+  PACKAGES="nmap tor proxychains bat"
 else
-    echo -e "${RED}Unsupported system. Only APT, Pacman, DNF/YUM based distributions are supported.${RESET}"
-    exit 1
+  echo -e "${RED}Unsupported system. Only APT, Pacman, DNF/YUM based distributions are supported.${RESET}"
+  exit 1
 fi
 
 # Atualizar pacotes
@@ -73,6 +73,7 @@ if ! command -v batcat &>/dev/null; then
 fi
 
 # Link do mynmap
+sudo rm /usr/local/bin/mynmap
 echo -e "\n${CYAN}Creating mynmap symlink...${RESET}"
 echo -e "${GRAY}Linking: $(pwd)/mynmap → /usr/local/bin/mynmap${RESET}"
 sudo ln -sv $(pwd)/mynmap /usr/local/bin/mynmap
