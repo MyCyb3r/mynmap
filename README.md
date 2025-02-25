@@ -15,6 +15,12 @@
 - **Full Port Scanning**: Checks all ports from 1 to 65535.
 - **Proxychains Support**: Allows scans through proxies to conceal the origin.
 
+## Compatible with based distros:
+
+- Debian (Tested on Kali, Debian, and Ubuntu)
+- Arch (Tested on Arch Linux)
+- Red Hat (Tested on Fedora)
+
 ## How to Use
 
 1. **Clone the repository**:
