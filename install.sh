@@ -73,7 +73,6 @@ if ! command -v batcat &>/dev/null; then
 fi
 
 # Link do mynmap
-sudo rm /usr/local/bin/mynmap
 echo -e "\n${CYAN}Creating mynmap symlink...${RESET}"
 echo -e "${GRAY}Linking: $(pwd)/mynmap → /usr/local/bin/mynmap${RESET}"
 sudo ln -sv $(pwd)/mynmap /usr/local/bin/mynmap
