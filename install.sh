@@ -42,7 +42,8 @@ elif command -v dnf &>/dev/null || command -v yum &>/dev/null; then
     INSTALL_CMD="sudo yum install -y"
   fi
   UPDATE_CMD="sudo $INSTALL_CMD epel-release && sudo $INSTALL_CMD update"
-  PACKAGES="nmap tor proxychains bat"
+  PACKAGES="nmap tor proxychains-ng"
+  PKG_MANAGER="redhat"
 else
   echo -e "${RED}Unsupported system. Only APT, Pacman, DNF/YUM based distributions are supported.${RESET}"
   exit 1
@@ -59,17 +60,32 @@ echo -e "${GRAY}Packages to install: ${PACKAGES}${RESET}"
 echo -e "${GRAY}Executing: ${INSTALL_CMD} ${PACKAGES}${RESET}"
 eval $INSTALL_CMD $PACKAGES
 
-# Verifica se o batcat está disponível
-echo -e "\n${CYAN}Verifying batcat installation...${RESET}"
-if ! command -v batcat &>/dev/null; then
-  if command -v bat &>/dev/null; then
-    echo -e "${GRAY}Creating symlink: bat → batcat${RESET}"
-    sudo ln -s $(which bat) /usr/local/bin/batcat
-  else
-    echo -e "${RED}batcat/bat not found in PATH:${RESET}"
-    echo -e "${GRAY}$(ls -l /usr/bin/bat* 2>/dev/null)${RESET}"
-    exit 1
+# Verifica instalação do bat após instalação dos pacotes
+echo -e "\n${CYAN}Verifying bat installation...${RESET}"
+if ! command -v bat &>/dev/null && [ "$PKG_MANAGER" = "redhat" ]; then
+  echo -e "${YELLOW}Bat not found in repositories, installing via Cargo...${RESET}"
+  
+  # Instalar Rust se necessário
+  if ! command -v cargo &>/dev/null; then
+    echo -e "${CYAN}Installing Rust...${RESET}"
+    
+    # Tentar instalar via repositórios primeiro
+    if sudo $INSTALL_CMD cargo 2>/dev/null; then
+      echo -e "${GREEN}Cargo instalado via repositórios${RESET}"
+    else
+      echo -e "${YELLOW}Instalando via Rustup...${RESET}"
+      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      source "$HOME/.cargo/env"
+    fi
   fi
+  
+  # Instalar bat via Cargo
+  echo -e "${CYAN}Building bat from source...${RESET}"
+  cargo install bat --locked
+  
+  # Criar symlink global
+  echo -e "${CYAN}Creating system symlink...${RESET}"
+  sudo ln -svf "$HOME/.cargo/bin/bat" /usr/local/bin/batcat
 fi
 
 # Link do mynmap
