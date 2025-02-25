@@ -41,11 +41,11 @@ show_help() {
   echo -e "${YELLOW}[8]${RESET}  ${CYAN}nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535${RESET}"
   echo -e "                         → Like option 7, but scans ${CYAN}all${RESET} ports, improving detection of hidden services.\n"
 
-  echo -e "${GREEN}[9]${RESET}  ${CYAN}proxychains nmap -A -n -Pn -sS -sC --script=vuln -g53 -f --mtu 24${RESET}"
+  echo -e "${GREEN}[9]${RESET}  ${CYAN}proxychains nmap -A --script=vuln (You can add more after in more options)${RESET}"
   echo -e "                         → Uses ProxyChains to route traffic through an anonymity network (Tor or other proxies),"
   echo -e "                           making it harder to trace back the scan to the original source.\n"
 
-  echo -e "${GREEN}[0]${RESET}  ${CYAN}proxychains nmap -A -n -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -p 1-65535${RESET}"
+  echo -e "${GREEN}[0]${RESET}  ${CYAN}proxychains nmap -A --script=vuln -p 1-65535 (You can add more after in more options)${RESET}"
   echo -e "                         → Like option 9, but scans ${CYAN}all${RESET} ports. This is a highly stealthy and thorough scan.\n"
 
   echo -e "${CYAN}Timing Options:${RESET}\n"
@@ -93,11 +93,11 @@ show_help_por() {
   echo -e "${YELLOW}[8]${RESET}  ${CYAN}nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535${RESET}"
   echo -e "                         → Igual à opção 7, mas escaneia ${CYAN}todas${RESET} as portas, aumentando a detecção de serviços ocultos.\n"
 
-  echo -e "${GREEN}[9]${RESET}  ${CYAN}proxychains nmap -A -n -Pn -sS -sC --script=vuln -g53 -f --mtu 24${RESET}"
+  echo -e "${GREEN}[9]${RESET}  ${CYAN}proxychains nmap -A --script=vuln(you can add more options after) ${RESET}"
   echo -e "                         → Usa o ProxyChains para encaminhar o tráfego por uma rede anônima (Tor ou outros proxies),"
   echo -e "                           dificultando o rastreamento da origem do escaneamento.\n"
 
-  echo -e "${GREEN}[0]${RESET}  ${CYAN}proxychains nmap -A -n -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -p 1-65535${RESET}"
+  echo -e "${GREEN}[0]${RESET}  ${CYAN}proxychains nmap -A --script=vuln -p 1-65535(you can add more options after)${RESET}"
   echo -e "                         → Igual à opção 9, mas escaneia ${CYAN}todas${RESET} as portas. Essa é uma varredura altamente discreta e completa.\n"
 
   echo -e "${CYAN}Opções de Tempo:${RESET}\n"
@@ -257,13 +257,13 @@ case "$option" in
   ;;
 
 9)
-  sudo proxychains nmap -A -n -sS -sC --script=vuln -g53 -f --mtu 24 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo proxychains nmap -A --script=vuln $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   batcat "$name_file.txt"
   ;;
 
 0)
-  sudo proxychains nmap -A -n -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo proxychains nmap -A --script=vuln -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   batcat "$name_file.txt"
   ;;
