@@ -18,8 +18,8 @@
 ## Compatible with based distros:
 
 - Debian (Tested on Kali, Debian, and Ubuntu)
-- Arch (Tested on Arch Linux)
-- Red Hat (Tested on Fedora)
+- Arch (Tested on Arch Linux and Manjaro)
+- Red Hat (Tested on Fedora and Rocky Linux 9)
 
 ## How to Use
 
