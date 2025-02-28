@@ -138,7 +138,12 @@ ANY KIND OF RESPONSIBILITY FOR ANY IMPROPE USE OF THIS TOOL USE IT WITH GOOD SEN
 
 echo -e "\n${CYAN}Enjoy${RESET}!\n"
 
-read -p "Target (IP or Domain): " alvo
+if [[ "$1" == "-t" && -n "$2" ]]; then
+  alvo="$2"
+else
+  # Se não, pergunta o alvo interativamente
+  read -p "Target (IP or Domain): " alvo
+fi
 
 echo -e "\nSelect an option:\n"
 echo -e "${RED}[1]${RESET} nmap -sV"
