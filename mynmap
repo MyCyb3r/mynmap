@@ -10,13 +10,14 @@ RESET='\e[0m'
 GRAY='\033[0;37m'
 
 show_help() {
-  echo -e "\n${CYAN}Usage:${RESET} $(basename "$0") [OPTIONS]"
-  echo -e "\nOptions:"
-  echo -e "  ${YELLOW}--help${RESET}      Show this help message and exit."
+  echo -e "\n${CYAN}Usage:${RESET} $(basename "$0") [OPTIONS]\n"
+  echo -e "\nOptions:\n"
+  echo -e "  ${YELLOW}--help${RESET}      Show this help message and exit.\n"
+  echo -e "  ${YELLOW}-t ${GREEN}[TARGET]${RESET}    Specify target directly without interactive prompt. ${GREEN}TARGET ${RESET}can be IP, IP Range or DOMAIN."
   echo -e "\nThis tool is designed to perform various types of ${CYAN}Nmap${RESET} scans on a target (IP or domain)."
   echo -e "After entering the target, you will select a scan type and optional settings."
 
-  echo -e "\n${CYAN}Scan Options:${RESET}"
+  echo -e "\n${RESET}Scan Options:${RESET}\n"
   echo -e "${RED}[1]${RESET}  ${CYAN}nmap -sV${RESET}            → Performs a basic service/version detection scan."
   echo -e "                           This identifies open ports and the services running on them.\n"
   echo -e "${RED}[2]${RESET}  ${CYAN}nmap -A${RESET}             → Enables aggressive mode, including OS detection, script scanning,"
@@ -58,13 +59,15 @@ show_help() {
 
   echo -e "\n${CYAN}Example usage:${RESET}"
   echo -e "$(basename "$0")          → Run the script interactively."
+  echo -e "$(basename "$0") -t example.com → Run scan on specified target non-interactively."
   echo -e "$(basename "$0") --help   → Show this help message.\n"
 }
 
 show_help_por() {
   echo -e "\n${CYAN}Uso:${RESET} $(basename "$0") [OPÇÕES]"
   echo -e "\nOpções:"
-  echo -e "  ${YELLOW}--help${RESET}      Exibe esta mensagem de ajuda e sai."
+  echo -e "  ${YELLOW}--help${RESET}      Exibe esta mensagem de ajuda e sai.\n"
+  echo -e "  ${YELLOW}-t ${GREEN}[ALVO]${RESET}      Especifica o alvo diretamente sem prompt interativo. O ${GREEN}ALVO${RESET} pode ser IP, Range de IP ou DOMINIO."
   echo -e "\nEsta ferramenta executa diferentes tipos de varreduras com o ${CYAN}Nmap${RESET} em um alvo (IP ou domínio)."
   echo -e "Após inserir o alvo, você selecionará um tipo de varredura e configurações opcionais."
 
@@ -110,6 +113,7 @@ show_help_por() {
 
   echo -e "\n${CYAN}Exemplo de uso:${RESET}"
   echo -e "$(basename "$0")          → Executa o script de forma interativa."
+  echo -e "$(basename "$0") -t exemplo.com → Executa o scan no alvo especificado sem interação."
   echo -e "$(basename "$0") --help   → Exibe esta mensagem de ajuda.\n"
 }
 
