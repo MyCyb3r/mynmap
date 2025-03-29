@@ -28,12 +28,12 @@ if command -v apt &>/dev/null; then
   echo -e "${GREEN}APT detected (Debian/Ubuntu/Kali)${RESET}"
   UPDATE_CMD="sudo apt update"
   INSTALL_CMD="sudo apt install -y"
-  PACKAGES="nmap tor proxychains bat"
+  PACKAGES="nmap tor proxychains bat dnsutils"
 elif command -v pacman &>/dev/null; then
   echo -e "${GREEN}Pacman detected (Arch/Manjaro)${RESET}"
   UPDATE_CMD="sudo pacman -Sy"
   INSTALL_CMD="sudo pacman -S --noconfirm"
-  PACKAGES="nmap tor proxychains-ng bat"
+  PACKAGES="nmap tor proxychains-ng bat bind dnsutils"
 elif command -v dnf &>/dev/null || command -v yum &>/dev/null; then
   echo -e "${GREEN}DNF/YUM detected (Fedora/RHEL/CentOS)${RESET}"
   if command -v dnf &>/dev/null; then
@@ -42,7 +42,7 @@ elif command -v dnf &>/dev/null || command -v yum &>/dev/null; then
     INSTALL_CMD="sudo yum install -y"
   fi
   UPDATE_CMD="sudo $INSTALL_CMD epel-release && sudo $INSTALL_CMD update"
-  PACKAGES="nmap tor proxychains-ng"
+  PACKAGES="nmap tor proxychains-ng bind-utils"
   PKG_MANAGER="redhat"
 else
   echo -e "${RED}Unsupported system. Only APT, Pacman, DNF/YUM based distributions are supported.${RESET}"
@@ -64,11 +64,11 @@ eval $INSTALL_CMD $PACKAGES
 echo -e "\n${CYAN}Verifying bat installation...${RESET}"
 if ! command -v bat &>/dev/null && [ "$PKG_MANAGER" = "redhat" ]; then
   echo -e "${YELLOW}Bat not found in repositories, installing via Cargo...${RESET}"
-  
+
   # Instalar Rust se necessário
   if ! command -v cargo &>/dev/null; then
     echo -e "${CYAN}Installing Rust...${RESET}"
-    
+
     # Tentar instalar via repositórios primeiro
     if sudo $INSTALL_CMD cargo 2>/dev/null; then
       echo -e "${GREEN}Cargo instalado via repositórios${RESET}"
@@ -78,17 +78,18 @@ if ! command -v bat &>/dev/null && [ "$PKG_MANAGER" = "redhat" ]; then
       source "$HOME/.cargo/env"
     fi
   fi
-  
+
   # Instalar bat via Cargo
   echo -e "${CYAN}Building bat from source...${RESET}"
   cargo install bat --locked
-  
+
   # Criar symlink global
   echo -e "${CYAN}Creating system symlink...${RESET}"
   sudo ln -svf "$HOME/.cargo/bin/bat" /usr/local/bin/batcat
 fi
 
 # Link do mynmap
+sudo rm /usr/local/bin/mynmap
 echo -e "\n${CYAN}Creating mynmap symlink...${RESET}"
 echo -e "${GRAY}Linking: $(pwd)/mynmap → /usr/local/bin/mynmap${RESET}"
 sudo ln -sv $(pwd)/mynmap /usr/local/bin/mynmap

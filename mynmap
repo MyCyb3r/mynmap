@@ -146,7 +146,7 @@ if [[ "$1" == "-t" && -n "$2" ]]; then
   alvo="$2"
 else
   # Se não, pergunta o alvo interativamente
-  read -p "Target (IP or Domain): " alvo
+  read -e -p "Target (IP or Domain): " alvo
 fi
 
 echo -e "\nSelect an option:\n"
@@ -160,7 +160,7 @@ echo -e "${YELLOW}[7]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu
 echo -e "${YELLOW}[8]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535"
 echo -e "${CYAN}[9]${RESET} proxychains nmap -A --script=vuln ${CYAN}(you can add more options later) "
 echo -e "${CYAN}[0]${RESET} proxychains nmap -A --script=vuln -p 1-65535 ${CYAN}(you can add more options later)${RESET}\n"
-read -p "Enter your choice (1-9): " option
+read -e -p "Enter your choice (1-9): " option
 
 echo -e "Timing templates:\n
 T0 --->${CYAN} Paranoid ${RESET}
@@ -170,9 +170,9 @@ T3 --->${GREEN} Normal${RESET}
 T4 --->${YELLOW} Aggressive${RESET}
 T5 --->${RED} Insane${RESET}"
 
-read -p "Select Timing (T0-T5, -T0 to -T5, or 0-5): " time_sel_input
+read -e -p "Select Timing (T0-T5, -T0 to -T5, or 0-5): " time_sel_input
 
-read -p "Type more options(or leave it empty): " moreopt
+read -e -p "Type more options(or leave it empty): " moreopt
 
 # Use regex to extract the number from the input
 if [[ $time_sel_input =~ ^-?T?([0-5])$ ]]; then
@@ -199,11 +199,37 @@ fi
 if [ "$cond_var" = "1" ]; then
   ip_target="$alvo"
 elif [ "$cond_var" = "2" ]; then
-  echo -e "\n${GREEN}--->${RESET} Starting ${YELLOW}Tor Service${RESET}(Using tor-resolve for dns) - ${YELLOW}Root Needed${RESET}!"
+  echo -e "\n${GREEN}--->${RESET} Starting ${YELLOW}Tor Service${RESET}(Using proxychains nslookup for dns) - ${YELLOW}Root Needed${RESET}!"
   sudo systemctl start tor
-  echo "wait..."
-  sleep 3
-  ip_target=$(tor-resolve "$alvo")
+  echo -e "wait...\n"
+  sleep 2
+  mapfile -t ips < <(proxychains nslookup "$alvo" | awk '/^Address: / {print $2}')
+
+  # Check if any IPs were found
+  if [ ${#ips[@]} -eq 0 ]; then
+    echo -e "No IPs found for ${CYAN}$alvo${RESET}"
+    exit 1
+  fi
+
+  # Display found IPs
+  echo -e "\nIPs found for ${CYAN}$alvo${RESET}:"
+  for i in "${!ips[@]}"; do
+    printf "%2d) %s\n" $((i + 1)) "${ips[i]}"
+  done
+
+  # User selection prompt
+  while true; do
+    read -e -p "Choose a number (1-${#ips[@]}): " choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#ips[@]} ]; then
+      ip_target="${ips[choice - 1]}"
+      break
+    else
+      echo "Invalid choice. Please try again."
+    fi
+  done
+
+  #echo "Selected IP: $ip_target"
+  #ip_target=$(tor-resolve "$alvo")
   echo -e "${YELLOW}\n$alvo ${GREEN}---> ${CYAN}$ip_target${RESET}\n"
 elif [ "$cond_var" = "3" ]; then
   echo -e "\nNot valid IP or Domain${YELLOW}!!!${RESET} Run mynmap again and type a valid one. "
