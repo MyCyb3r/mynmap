@@ -9,6 +9,13 @@ WHITE='\e[37m'
 RESET='\e[0m'
 GRAY='\033[0;37m'
 
+# Verificar gerenciador de pacotes
+if command -v pacman >/dev/null 2>&1; then
+    bat_cmd="bat"
+else
+    bat_cmd="batcat"
+fi
+
 show_help() {
   echo -e "\n${CYAN}Usage:${RESET} $(basename "$0") [OPTIONS]\n"
   echo -e "\nOptions:\n"
@@ -246,61 +253,61 @@ case "$option" in
 1)
   sudo nmap -sV $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 2)
   sudo nmap -A $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 3)
   sudo nmap -A -p 1-65535 -Pn $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 4)
   sudo nmap -n -A -sT -sC --script=vuln -g53 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 5)
   sudo nmap -n -A -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 6)
   sudo nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 7)
   sudo nmap -n -A -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 8)
   sudo nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 9)
   sudo proxychains nmap -A --script=vuln $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 
 0)
   sudo proxychains nmap -A --script=vuln -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
-  batcat "$name_file.txt"
+  $bat_cmd "$name_file.txt"
   ;;
 *)
   echo "Invalid Option! Run mynmap again and select a valid one"
