@@ -32,7 +32,7 @@ show_help() {
   echo -e "${RED}[3]${RESET}  ${CYAN}nmap -A -p 1-65535${RESET}  → Performs an aggressive scan, but scans ${CYAN}all${RESET} 65,535 TCP ports."
   echo -e "                           Useful when looking for non-standard services running on unusual ports.\n"
 
-  echo -e "${YELLOW}[4]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -D 192.168.0.1${RESET}"
+  echo -e "${YELLOW}[4]${RESET}  ${CYAN}nmap -n -A -Pn -sC --script=vuln${RESET}"
   echo -e "                         → Performs a TCP-based scan (-sT) without DNS resolution (-n), with OS detection (-A),"
   echo -e "                           and runs vulnerability scripts (--script=vuln)."
   echo -e "                           Uses decoys (-D) to obscure the attack source and sets a specific source port (-g53).\n"
@@ -40,7 +40,7 @@ show_help() {
   echo -e "${YELLOW}[5]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1${RESET}"
   echo -e "                         → Similar to option 4, but adds fragmentation (-f) and sets an MTU size (24) to evade detection.\n"
 
-  echo -e "${YELLOW}[6]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535${RESET}"
+  echo -e "${YELLOW}[6]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -f --mtu 24 -p 1-65535 ${RESET}"
   echo -e "                         → Like option 5, but scans ${CYAN}all${RESET} ports, increasing the likelihood of finding vulnerabilities.\n"
 
   echo -e "${YELLOW}[7]${RESET}  ${CYAN}nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1${RESET}"
@@ -86,7 +86,7 @@ show_help_por() {
   echo -e "${RED}[3]${RESET}  ${CYAN}nmap -A -p 1-65535${RESET}  → Executa uma varredura agressiva, mas analisando ${CYAN}todas${RESET} as 65.535 portas TCP."
   echo -e "                           Útil para encontrar serviços rodando em portas incomuns.\n"
 
-  echo -e "${YELLOW}[4]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -D 192.168.0.1${RESET}"
+  echo -e "${YELLOW}[4]${RESET}  ${CYAN}nmap -n -A -Pn -sC --script=vuln${RESET}"
   echo -e "                         → Executa uma varredura baseada em TCP (-sT) sem resolução de DNS (-n), com detecção de SO (-A),"
   echo -e "                           e executa scripts de vulnerabilidade (--script=vuln)."
   echo -e "                           Usa decoys (-D) para mascarar a origem do ataque e define uma porta de origem específica (-g53).\n"
@@ -94,7 +94,7 @@ show_help_por() {
   echo -e "${YELLOW}[5]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1${RESET}"
   echo -e "                         → Semelhante à opção 4, mas adiciona fragmentação (-f) e define um tamanho de MTU (24) para evitar detecção.\n"
 
-  echo -e "${YELLOW}[6]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535${RESET}"
+  echo -e "${YELLOW}[6]${RESET}  ${CYAN}nmap -n -A -Pn -sT -sC --script=vuln -f --mtu 24 -p 1-65535 ${RESET}"
   echo -e "                         → Igual à opção 5, mas escaneia ${CYAN}todas${RESET} as portas, aumentando a chance de encontrar vulnerabilidades.\n"
 
   echo -e "${YELLOW}[7]${RESET}  ${CYAN}nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1${RESET}"
@@ -160,9 +160,9 @@ echo -e "\nSelect an option:\n"
 echo -e "${RED}[1]${RESET} nmap -sV"
 echo -e "${RED}[2]${RESET} nmap -A"
 echo -e "${RED}[3]${RESET} nmap -A -p 1-65535"
-echo -e "${YELLOW}[4]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -g53 -D 192.168.0.1"
+echo -e "${YELLOW}[4]${RESET} nmap -n -A -Pn -sC --script=vuln"
 echo -e "${YELLOW}[5]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1"
-echo -e "${YELLOW}[6]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535"
+echo -e "${YELLOW}[6]${RESET} nmap -n -A -Pn -sT -sC --script=vuln -f --mtu 24 -p 1-65535 "
 echo -e "${YELLOW}[7]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1"
 echo -e "${YELLOW}[8]${RESET} nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535"
 echo -e "${CYAN}[9]${RESET} proxychains nmap -A --script=vuln ${CYAN}(you can add more options later) "
@@ -269,25 +269,25 @@ case "$option" in
   ;;
 
 4)
-  sudo nmap -n -A -sT -sC --script=vuln -g53 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo nmap -n -A -Pn -sC --script=vuln $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   $bat_cmd "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   ;;
 
 5)
-  sudo nmap -n -A -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo nmap -n -A -Pn -sT -sC --script=vuln -f --mtu 24 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   $bat_cmd "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   ;;
 
 6)
-  sudo nmap -n -A -Pn -sT -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo nmap -n -A -Pn -sT -sC --script=vuln -f --mtu 24 -p 1-65535 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   $bat_cmd "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   ;;
 
 7)
-  sudo nmap -n -A -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
+  sudo nmap -n -A -Pn -sS -sC --script=vuln -g53 -f --mtu 24 -D 192.168.0.1 $ip_target -T$time_sel $moreopt | tee "$name_file.txt"
   $bat_cmd "$name_file.txt"
   echo -e "\nA ${CYAN}file${RESET} was ${CYAN}saved ${RESET}on ${YELLOW}--->${RESET} ${dir_var}/${name_file}.txt"
   ;;
